@@ -275,13 +275,18 @@ and run `msys2_shell.cmd`.
 
 ## Building using MSYS2 ## {#msys2_build}
 
-The following commands assume you are building for 64-bit Windows, and that you already have
-the KiCad source code in a folder called `kicad-source` in your home directory.  See below
+The following commands assume you are building for 64-bit Windows.  See below
 for changes if you need to build for 32-bit instead.  Run `mingw64.exe` from the MSYS2
 install path. At the command prompt run the the following commands:
 
+
+
+
+	
+	
+
     pacman -S base-devel \
-              git \
+			  git \
               mingw-w64-x86_64-cmake \
               mingw-w64-x86_64-doxygen \
               mingw-w64-x86_64-gcc \
@@ -298,7 +303,8 @@ install path. At the command prompt run the the following commands:
               mingw-w64-x86_64-glm \
               mingw-w64-x86_64-oce \
               mingw-w64-x86_64-ngspice
-    cd kicad-source
+	git clone https://git.launchpad.net/kicad
+    cd kicad
     mkdir -p build/release
     mkdir build/debug               # Optional for debug build.
     cd build/release
@@ -320,7 +326,18 @@ For debug builds, run the cmake command with `-DCMAKE_BUILD_TYPE=Debug` from the
 There are some known issues that are specific to MSYS2.  This section provides a list of the
 currently known issues when building KiCad using MSYS2.
 
+###  GLM version 0.9.9.3 is incompatible with KiCad. ### {#ki_glm_0993}
 
+GLM version 0.9.9.3 is incompatible with KiCad. You must downgrade to version 0.9.9.2 or older. Open the file /etc/pacman.d/mirrorlist.ming64 to get the location of your mirror, download the older version, and use the following command to install it:
+	 pacman -U ~/mingw-w64-x86_64-glm-0.9.9.2-1-any.pkg.tar.xz
+
+You should also
+configure pacman to prevent upgrading the 64-bit GLM package by adding:
+
+    IgnorePkg = mingw-w64-x86_64-glm
+
+to your /etc/pacman.conf file.
+	 
 ### 64-bit Package of Boost 1.59 ### {#ki_msys2_64bit_boost}
 
 The context library of the x86_64 package of Boost version 1.59 is broken and will cause KiCad
